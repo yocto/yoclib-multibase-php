@@ -30,46 +30,8 @@ class Multibase{
     public const BASE64URLPAD = 'U';
     /*DRAFT*/public const PROQUINT = 'p';
 
-    public static function encode(string $b,string $data){
-        switch($b){
-            case self::IDENTITY:{
-                return $b.$data;
-            }
-            case self::BASE2:{
-                return $b.Base2::encode($data);
-            }
-            case self::BASE8:{
-                return $b.Base8::encode($data);
-            }
-            case self::BASE10:{
-                return $b.Base10::encode($data);
-            }
-            case self::BASE16:{
-                return $b.Base16::encode($data);
-            }
-            case self::BASE16UPPER:{
-                return $b.strtoupper(Base16::encode($data));
-            }
-            //TODO base 32
-            //TODO base 36
-            //TODO base 58
-            case self::BASE64:{
-                return $b.str_replace('=','',Base64::encode($data));
-            }
-            case self::BASE64PAD:{
-                return $b.Base64::encode($data);
-            }
-            case self::BASE64URL:{
-                return $b.str_replace('=','',str_replace(['+','/'],['-','_'],Base64::encode($data)));
-            }
-            case self::BASE64URLPAD:{
-                return $b.str_replace(['+','/'],['-','_'],Base64::encode($data));
-            }
-            default:{
-                throw new InvalidArgumentException('Unsupported base encoding: '.$b);
-            }
-        }
-    }
+    private const BITCOIN = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+    private const FLICKR = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
 
     public static function decode(string $data): string{
         $b = substr($data,0,1);
@@ -94,8 +56,18 @@ class Multibase{
                 return Base16::decode(strtolower($rest));
             }
             //TODO base 32
-            //TODO base 36
-            //TODO base 58
+            case self::BASE36:{
+                return Base36::decode($rest);
+            }
+            case self::BASE36UPPER:{
+                return Base36::decode(strtolower($rest));
+            }
+            case self::BASE58BTC:{
+                return Base58::decode($rest,self::BITCOIN);
+            }
+            case self::BASE58FLICKER:{
+                return Base58::decode($rest,self::FLICKR);
+            }
             case self::BASE64:
             case self::BASE64PAD:{
                 return Base64::decode($rest);
@@ -106,6 +78,57 @@ class Multibase{
             }
             default:{
                 throw new InvalidArgumentException('Unsupported base decoding: '.$b);
+            }
+        }
+    }
+
+    public static function encode(string $b,string $data){
+        switch($b){
+            case self::IDENTITY:{
+                return $b.$data;
+            }
+            case self::BASE2:{
+                return $b.Base2::encode($data);
+            }
+            case self::BASE8:{
+                return $b.Base8::encode($data);
+            }
+            case self::BASE10:{
+                return $b.Base10::encode($data);
+            }
+            case self::BASE16:{
+                return $b.Base16::encode($data);
+            }
+            case self::BASE16UPPER:{
+                return $b.strtoupper(Base16::encode($data));
+            }
+            //TODO base 32
+            case self::BASE36:{
+                return $b.Base36::encode($data);
+            }
+            case self::BASE36UPPER:{
+                return $b.strtoupper(Base36::encode($data));
+            }
+            case self::BASE58BTC:{
+                return $b.Base58::encode($data,self::BITCOIN);
+            }
+            case self::BASE58FLICKER:{
+                return $b.Base58::encode($data,self::FLICKR);
+            }
+            case self::BASE64:{
+                return $b.str_replace('=','',Base64::encode($data));
+            }
+            case self::BASE64PAD:{
+                return $b.Base64::encode($data);
+            }
+            case self::BASE64URL:{
+                return $b.str_replace('=','',str_replace(['+','/'],['-','_'],Base64::encode($data)));
+            }
+            case self::BASE64URLPAD:{
+                return $b.str_replace(['+','/'],['-','_'],Base64::encode($data));
+            }
+            default:{
+                throw new InvalidArgumentException('Unsupported base encoding: '.$b);
             }
         }
     }
