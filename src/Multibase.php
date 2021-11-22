@@ -23,7 +23,7 @@ class Multibase{
     /*DRAFT*/public const BASE36 = 'k';
     /*DRAFT*/public const BASE36UPPER = 'K';
     public const BASE58BTC = 'z';
-    public const BASE58FLICKER = 'Z';
+    public const BASE58FLICKR = 'Z';
     public const BASE64 = 'm';
     public const BASE64PAD = 'M';
     public const BASE64URL = 'u';
@@ -65,7 +65,7 @@ class Multibase{
             case self::BASE58BTC:{
                 return Base58::decode($rest,self::BITCOIN);
             }
-            case self::BASE58FLICKER:{
+            case self::BASE58FLICKR:{
                 return Base58::decode($rest,self::FLICKR);
             }
             case self::BASE64:
@@ -112,7 +112,7 @@ class Multibase{
             case self::BASE58BTC:{
                 return $b.Base58::encode($data,self::BITCOIN);
             }
-            case self::BASE58FLICKER:{
+            case self::BASE58FLICKR:{
                 return $b.Base58::encode($data,self::FLICKR);
             }
             case self::BASE64:{
