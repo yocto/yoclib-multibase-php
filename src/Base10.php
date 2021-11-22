@@ -8,12 +8,25 @@ class Base10{
         while(strlen($hex)%2!==0){
             $hex = '0'.$hex;
         }
+        foreach(str_split($decimal) AS $chunk){
+            if($chunk!=="0"){
+                break;
+            }
+            $hex = '00'.$hex;
+        }
         return hex2bin($hex);
     }
 
     public static function encode(string $data): string{
         $hex = bin2hex($data);
-        return BaseUtil::str_baseconvert($hex,16,10);
+        $decimal = BaseUtil::str_baseconvert($hex,16,10);
+        foreach(str_split($data) AS $chunk){
+            if($chunk!=="\0"){
+                break;
+            }
+            $decimal = '0'.$decimal;
+        }
+        return $decimal;
     }
 
 }
