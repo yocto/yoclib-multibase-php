@@ -4,31 +4,51 @@ namespace YOCLIB\Multiformats\Multibase;
 class Base32{
 
     public static function decode(string $data,string $alphabet): string{
-        if (empty($data)) {
-            return '';
-        }
-
-        $data = str_split($data);
-        $data = array_map(static function ($character) use($alphabet) {
-            if ($character !== $alphabet[strlen($alphabet)-1]) {
-                $index = strpos($alphabet, $character);
-                return sprintf('%05b', $index);
+        $flippedAlphabet = array_flip(str_split($alphabet));
+        $binary = '';
+        for($i=0;$i<strlen($data);$i++){
+            $char = strtolower($data[$i]);
+            if($char==='='){
+                continue;
             }
-        }, $data);
-        $binary = implode('', $data);
-
-        /* Split to eight bit chunks. */
-        $data = str_split($binary, 8);
-
-        /* Make sure binary is divisible by eight by ignoring the incomplete byte. */
-        $last = array_pop($data);
-        if ((null !== $last) && (8 === strlen($last))) {
-            $data[] = $last;
+            $binaryChunk = decbin($flippedAlphabet[$char]);
+            while(strlen($binaryChunk)%5!==0){
+                $binaryChunk = '0'.$binaryChunk;
+            }
+            $binary .= $binaryChunk;
         }
+        $padding = strlen($binary)%8;
+        if($padding!==0){
+            $binary = substr($binary,0,-$padding);
+        }
+        return Base2::decode($binary);
 
-        return implode('', array_map(function ($byte) {
-            return chr((int)bindec($byte));
-        }, $data));
+
+//        $map = str_split($alphabet);
+//        $flippedMap = array_flip($map);
+//
+//        $paddingCharCount = substr_count($data, $map[32]);
+//        $allowedValues = array(6,4,3,1,0);
+//        if(!in_array($paddingCharCount, $allowedValues)) return false;
+//        for($i=0; $i<4; $i++){
+//            if($paddingCharCount == $allowedValues[$i] &&
+//                substr($data, -($allowedValues[$i])) != str_repeat($map[32], $allowedValues[$i])) return false;
+//        }
+//        $data = str_replace('=','', $data);
+//        $data = str_split($data);
+//        $binaryString = "";
+//        for($i=0; $i < count($data); $i = $i+8) {
+//            $x = "";
+//            if(!in_array($data[$i], $map)) return false;
+//            for($j=0; $j < 8; $j++) {
+//                $x .= str_pad(base_convert(@$flippedMap[@$data[$i + $j]], 10, 2), 5, '0', STR_PAD_LEFT);
+//            }
+//            $eightBits = str_split($x, 8);
+//            for($z = 0; $z < count($eightBits); $z++) {
+//                $binaryString .= ( ($y = chr(base_convert($eightBits[$z], 2, 10))) || ord($y) == 48 ) ? $y:"";
+//            }
+//        }
+//        return $binaryString;
     }
 
     public static function encode(string $data,string $alphabet): string{
