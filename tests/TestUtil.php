@@ -23,10 +23,6 @@ class TestUtil{
             $vector = $csv[$i][1];
 
             $constantName = Multibase::class.'::'.strtoupper($encoding);
-            if(strpos($constantName,'32')){
-                //SKIP base32 for now
-                continue;
-            }
 
             if($encode){
                 $test->assertEquals($vector,Multibase::encode(constant($constantName),$data),'Encoding '.$encoding);

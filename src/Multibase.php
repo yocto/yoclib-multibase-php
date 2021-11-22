@@ -30,8 +30,12 @@ class Multibase{
     public const BASE64URLPAD = 'U';
     /*DRAFT*/public const PROQUINT = 'p';
 
-    private const BITCOIN = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-    private const FLICKR = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
+    private const ALPHABET32 = 'abcdefghijklmnopqrstuvwxyz234567=';
+    private const ALPHABET32_HEX = '0123456789abcdefghijklmnopqrstuv=';
+    private const ALPHABET32_ZOOKO = 'ybndrfg8ejkmcpqxot1uwisza345h769=';
+
+    private const ALPHABET58_BITCOIN = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+    private const ALPHABET58_FLICKR = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
 
     public static function decode(string $data): string{
         $b = substr($data,0,1);
@@ -55,7 +59,25 @@ class Multibase{
             case self::BASE16UPPER:{
                 return Base16::decode(strtolower($rest));
             }
-            //TODO base 32
+            case self::BASE32HEX:
+            case self::BASE32HEXPAD:{
+                return Base32::decode($rest,self::ALPHABET32_HEX);
+            }
+            case self::BASE32HEXUPPER:
+            case self::BASE32HEXPADUPPER:{
+                return Base32::decode(strtolower($rest),self::ALPHABET32_HEX);
+            }
+            case self::BASE32:
+            case self::BASE32PAD:{
+                return Base32::decode($rest,self::ALPHABET32);
+            }
+            case self::BASE32UPPER:
+            case self::BASE32PADUPPER:{
+                return Base32::decode(strtolower($rest),self::ALPHABET32);
+            }
+            case self::BASE32Z:{
+                return Base32::decode($rest,self::ALPHABET32_ZOOKO);
+            }
             case self::BASE36:{
                 return Base36::decode($rest);
             }
@@ -63,10 +85,10 @@ class Multibase{
                 return Base36::decode(strtolower($rest));
             }
             case self::BASE58BTC:{
-                return Base58::decode($rest,self::BITCOIN);
+                return Base58::decode($rest,self::ALPHABET58_BITCOIN);
             }
             case self::BASE58FLICKR:{
-                return Base58::decode($rest,self::FLICKR);
+                return Base58::decode($rest,self::ALPHABET58_FLICKR);
             }
             case self::BASE64:
             case self::BASE64PAD:{
@@ -102,7 +124,33 @@ class Multibase{
             case self::BASE16UPPER:{
                 return $b.strtoupper(Base16::encode($data));
             }
-            //TODO base 32
+            case self::BASE32HEX:{
+                return $b.str_replace('=','',Base32::encode($data,self::ALPHABET32_HEX));
+            }
+            case self::BASE32HEXUPPER:{
+                return $b.str_replace('=','',strtoupper(Base32::encode($data,self::ALPHABET32_HEX)));
+            }
+            case self::BASE32HEXPAD:{
+                return $b.Base32::encode($data,self::ALPHABET32_HEX);
+            }
+            case self::BASE32HEXPADUPPER:{
+                return $b.strtoupper(Base32::encode($data,self::ALPHABET32_HEX));
+            }
+            case self::BASE32:{
+                return $b.str_replace('=','',Base32::encode($data,self::ALPHABET32));
+            }
+            case self::BASE32UPPER:{
+                return $b.str_replace('=','',strtoupper(Base32::encode($data,self::ALPHABET32)));
+            }
+            case self::BASE32PAD:{
+                return $b.Base32::encode($data,self::ALPHABET32);
+            }
+            case self::BASE32PADUPPER:{
+                return $b.strtoupper(Base32::encode($data,self::ALPHABET32));
+            }
+            case self::BASE32Z:{
+                return $b.str_replace('=','',Base32::encode($data,self::ALPHABET32_ZOOKO));
+            }
             case self::BASE36:{
                 return $b.Base36::encode($data);
             }
@@ -110,10 +158,10 @@ class Multibase{
                 return $b.strtoupper(Base36::encode($data));
             }
             case self::BASE58BTC:{
-                return $b.Base58::encode($data,self::BITCOIN);
+                return $b.Base58::encode($data,self::ALPHABET58_BITCOIN);
             }
             case self::BASE58FLICKR:{
-                return $b.Base58::encode($data,self::FLICKR);
+                return $b.Base58::encode($data,self::ALPHABET58_FLICKR);
             }
             case self::BASE64:{
                 return $b.str_replace('=','',Base64::encode($data));
