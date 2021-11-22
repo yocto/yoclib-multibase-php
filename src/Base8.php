@@ -4,23 +4,32 @@ namespace YOCLIB\Multiformats\Multibase;
 class Base8{
 
     public static function decode(string $octal): string{
-        $hex = BaseUtil::str_baseconvert($octal,8,16);
-        while(strlen($hex)%2!==0){
-            $hex = '0'.$hex;
+        $binary = '';
+        for($i=0;$i<strlen($octal);$i++){
+            $binaryChunk = decbin(octdec($octal[$i]));
+            while(strlen($binaryChunk)%3!==0){
+                $binaryChunk = '0'.$binaryChunk;
+            }
+            $binary .= $binaryChunk;
         }
-        $binary = hex2bin($hex);
-        for($i=0;$i<strlen($binary);$i++){
-            $binary[$i] = chr(ord($binary[$i])/2);
+        $padding = strlen($binary)%8;
+        if($padding!==0){
+            $binary = substr($binary,0,-$padding);
         }
-        return $binary;
+        return Base2::decode($binary);
     }
 
     public static function encode(string $data): string{
-        for($i=0;$i<strlen($data);$i++){
-            $data[$i] = chr(ord($data[$i])*2);
+        $binary = Base2::encode($data);
+        $octal = '';
+        foreach(str_split($binary,3) AS $chunk){
+            while(strlen($chunk)%3!==0){
+                $chunk .= '0';
+            }
+            $octalChunk = decoct(bindec($chunk));
+            $octal .= $octalChunk;
         }
-        $hex = bin2hex($data);
-        return BaseUtil::str_baseconvert($hex,16,8);
+        return $octal;
     }
 
 }
