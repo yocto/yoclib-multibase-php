@@ -37,148 +37,208 @@ class Multibase{
     private const ALPHABET58_BITCOIN = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
     private const ALPHABET58_FLICKR = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
 
-    public static function decode(string $data): string{
-        $b = substr($data,0,1);
-        $rest = substr($data,1);
-        switch($b){
+    /**
+     * @param string $data
+     * @param string|null $code
+     * @return string
+     */
+    public static function decode(string $data,?string $code=null): string{
+        $decoded = null;
+        if($code==null){
+            $code = substr($data,0,1);
+            $data = substr($data,1);
+        }
+        switch($code){
             case self::IDENTITY:{
-                return $rest;
+                $decoded = $data;
+                break;
             }
             case self::BASE2:{
-                return Base2::decode($rest);
+                $decoded = Base2::decode($data);
+                break;
             }
             case self::BASE8:{
-                return Base8::decode($rest);
+                $decoded = Base8::decode($data);
+                break;
             }
             case self::BASE10:{
-                return Base10::decode($rest);
+                $decoded = Base10::decode($data);
+                break;
             }
             case self::BASE16:{
-                return Base16::decode($rest);
+                $decoded = Base16::decode($data);
+                break;
             }
             case self::BASE16UPPER:{
-                return Base16::decode(strtolower($rest));
+                $decoded = Base16::decode(strtolower($data));
+                break;
             }
             case self::BASE32HEX:
             case self::BASE32HEXPAD:{
-                return Base32::decode($rest,self::ALPHABET32_HEX);
+                $decoded = Base32::decode($data,self::ALPHABET32_HEX);
+                break;
             }
             case self::BASE32HEXUPPER:
             case self::BASE32HEXPADUPPER:{
-                return Base32::decode(strtolower($rest),self::ALPHABET32_HEX);
+                $decoded = Base32::decode(strtolower($data),self::ALPHABET32_HEX);
+                break;
             }
             case self::BASE32:
             case self::BASE32PAD:{
-                return Base32::decode($rest,self::ALPHABET32);
+                $decoded = Base32::decode($data,self::ALPHABET32);
+                break;
             }
             case self::BASE32UPPER:
             case self::BASE32PADUPPER:{
-                return Base32::decode(strtolower($rest),self::ALPHABET32);
+                $decoded = Base32::decode(strtolower($data),self::ALPHABET32);
+                break;
             }
             case self::BASE32Z:{
-                return Base32::decode($rest,self::ALPHABET32_ZOOKO);
+                $decoded = Base32::decode($data,self::ALPHABET32_ZOOKO);
+                break;
             }
             case self::BASE36:{
-                return Base36::decode($rest);
+                $decoded = Base36::decode($data);
+                break;
             }
             case self::BASE36UPPER:{
-                return Base36::decode(strtolower($rest));
+                $decoded = Base36::decode(strtolower($data));
+                break;
             }
             case self::BASE58BTC:{
-                return Base58::decode($rest,self::ALPHABET58_BITCOIN);
+                $decoded = Base58::decode($data,self::ALPHABET58_BITCOIN);
+                break;
             }
             case self::BASE58FLICKR:{
-                return Base58::decode($rest,self::ALPHABET58_FLICKR);
+                $decoded = Base58::decode($data,self::ALPHABET58_FLICKR);
+                break;
             }
             case self::BASE64:
             case self::BASE64PAD:{
-                return Base64::decode($rest);
+                $decoded = Base64::decode($data);
+                break;
             }
             case self::BASE64URL:
             case self::BASE64URLPAD:{
-                return Base64::decode(str_replace(['-','_'],['+','/'],$rest));
+                $decoded = Base64::decode(str_replace(['-','_'],['+','/'],$data));
+                break;
             }
             default:{
-                throw new InvalidArgumentException('Unsupported base decoding: '.$b);
+                throw new InvalidArgumentException('Unsupported base decoding: '.$code);
             }
         }
+        return $decoded;
     }
 
-    public static function encode(string $b,string $data){
-        switch($b){
+    /**
+     * @param string $code
+     * @param string $data
+     * @param bool $addCodePrefix
+     * @return string|null
+     */
+    public static function encode(string $code,string $data,$addCodePrefix=true){
+        $encoded = null;
+        switch($code){
             case self::IDENTITY:{
-                return $b.$data;
+                $encoded = $data;
+                break;
             }
             case self::BASE2:{
-                return $b.Base2::encode($data);
+                $encoded = Base2::encode($data);
+                break;
             }
             case self::BASE8:{
-                return $b.Base8::encode($data);
+                $encoded = Base8::encode($data);
+                break;
             }
             case self::BASE10:{
-                return $b.Base10::encode($data);
+                $encoded = Base10::encode($data);
+                break;
             }
             case self::BASE16:{
-                return $b.Base16::encode($data);
+                $encoded = Base16::encode($data);
+                break;
             }
             case self::BASE16UPPER:{
-                return $b.strtoupper(Base16::encode($data));
+                $encoded = strtoupper(Base16::encode($data));
+                break;
             }
             case self::BASE32HEX:{
-                return $b.str_replace('=','',Base32::encode($data,self::ALPHABET32_HEX));
+                $encoded = str_replace('=','',Base32::encode($data,self::ALPHABET32_HEX));
+                break;
             }
             case self::BASE32HEXUPPER:{
-                return $b.str_replace('=','',strtoupper(Base32::encode($data,self::ALPHABET32_HEX)));
+                $encoded = str_replace('=','',strtoupper(Base32::encode($data,self::ALPHABET32_HEX)));
+                break;
             }
             case self::BASE32HEXPAD:{
-                return $b.Base32::encode($data,self::ALPHABET32_HEX);
+                $encoded = Base32::encode($data,self::ALPHABET32_HEX);
+                break;
             }
             case self::BASE32HEXPADUPPER:{
-                return $b.strtoupper(Base32::encode($data,self::ALPHABET32_HEX));
+                $encoded = strtoupper(Base32::encode($data,self::ALPHABET32_HEX));
+                break;
             }
             case self::BASE32:{
-                return $b.str_replace('=','',Base32::encode($data,self::ALPHABET32));
+                $encoded = str_replace('=','',Base32::encode($data,self::ALPHABET32));
+                break;
             }
             case self::BASE32UPPER:{
-                return $b.str_replace('=','',strtoupper(Base32::encode($data,self::ALPHABET32)));
+                $encoded = str_replace('=','',strtoupper(Base32::encode($data,self::ALPHABET32)));
+                break;
             }
             case self::BASE32PAD:{
-                return $b.Base32::encode($data,self::ALPHABET32);
+                $encoded = Base32::encode($data,self::ALPHABET32);
+                break;
             }
             case self::BASE32PADUPPER:{
-                return $b.strtoupper(Base32::encode($data,self::ALPHABET32));
+                $encoded = strtoupper(Base32::encode($data,self::ALPHABET32));
+                break;
             }
             case self::BASE32Z:{
-                return $b.str_replace('=','',Base32::encode($data,self::ALPHABET32_ZOOKO));
+                $encoded = str_replace('=','',Base32::encode($data,self::ALPHABET32_ZOOKO));
+                break;
             }
             case self::BASE36:{
-                return $b.Base36::encode($data);
+                $encoded = Base36::encode($data);
+                break;
             }
             case self::BASE36UPPER:{
-                return $b.strtoupper(Base36::encode($data));
+                $encoded = strtoupper(Base36::encode($data));
+                break;
             }
             case self::BASE58BTC:{
-                return $b.Base58::encode($data,self::ALPHABET58_BITCOIN);
+                $encoded = Base58::encode($data,self::ALPHABET58_BITCOIN);
+                break;
             }
             case self::BASE58FLICKR:{
-                return $b.Base58::encode($data,self::ALPHABET58_FLICKR);
+                $encoded = Base58::encode($data,self::ALPHABET58_FLICKR);
+                break;
             }
             case self::BASE64:{
-                return $b.str_replace('=','',Base64::encode($data));
+                $encoded = str_replace('=','',Base64::encode($data));
+                break;
             }
             case self::BASE64PAD:{
-                return $b.Base64::encode($data);
+                $encoded = Base64::encode($data);
+                break;
             }
             case self::BASE64URL:{
-                return $b.str_replace('=','',str_replace(['+','/'],['-','_'],Base64::encode($data)));
+                $encoded = str_replace('=','',str_replace(['+','/'],['-','_'],Base64::encode($data)));
+                break;
             }
             case self::BASE64URLPAD:{
-                return $b.str_replace(['+','/'],['-','_'],Base64::encode($data));
+                $encoded = str_replace(['+','/'],['-','_'],Base64::encode($data));
+                break;
             }
             default:{
-                throw new InvalidArgumentException('Unsupported base encoding: '.$b);
+                throw new InvalidArgumentException('Unsupported base encoding: '.$code);
             }
         }
+        if($addCodePrefix){
+            $encoded = $code.$encoded;
+        }
+        return $encoded;
     }
 
 }
