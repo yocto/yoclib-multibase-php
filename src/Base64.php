@@ -3,12 +3,20 @@ namespace YOCLIB\Multiformats\Multibase;
 
 class Base64{
 
-    public static function decode(string $base64): string{
-        return base64_decode($base64);
-    }
+	/**
+	 * @param string $base64
+	 * @return string
+	 */
+	public static function decode(string $base64): string{
+		return base64_decode($base64);
+	}
 
-    public static function encode(string $data): string{
-        return base64_encode($data);
-    }
+	/**
+	 * @param string $data
+	 * @return string
+	 */
+	public static function encode(string $data): string{
+		return base64_encode($data);
+	}
 
 }
