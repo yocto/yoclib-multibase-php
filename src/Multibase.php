@@ -36,9 +36,14 @@ class Multibase{
     private const ALPHABET32_HEX = '0123456789abcdefghijklmnopqrstuv=';
     private const ALPHABET32_ZOOKO = 'ybndrfg8ejkmcpqxot1uwisza345h769=';
 
+    private const ALPHABET45 = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:';
+
     private const ALPHABET58_BITCOIN = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
     private const ALPHABET58_FLICKR = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
-    
+
+    private const ALPHABET_PROQUINT_CONSONANTS = 'bdfghjklmnprstvz';
+    private const ALPHABET_PROQUINT_VOWELS = 'aiou';
+
     private const ALPHABET256 = ['🚀','🪐','☄','🛰','🌌','🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘','🌍','🌏','🌎','🐉','☀','💻','🖥','💾','💿','😂','❤','😍','🤣','😊','🙏','💕','😭','😘','👍','😅','👏','😁','🔥','🥰','💔','💖','💙','😢','🤔','😆','🙄','💪','😉','☺','👌','🤗','💜','😔','😎','😇','🌹','🤦','🎉','💞','✌','✨','🤷','😱','😌','🌸','🙌','😋','💗','💚','😏','💛','🙂','💓','🤩','😄','😀','🖤','😃','💯','🙈','👇','🎶','😒','🤭','❣','😜','💋','👀','😪','😑','💥','🙋','😞','😩','😡','🤪','👊','🥳','😥','🤤','👉','💃','😳','✋','😚','😝','😴','🌟','😬','🙃','🍀','🌷','😻','😓','⭐','✅','🥺','🌈','😈','🤘','💦','✔','😣','🏃','💐','☹','🎊','💘','😠','☝','😕','🌺','🎂','🌻','😐','🖕','💝','🙊','😹','🗣','💫','💀','👑','🎵','🤞','😛','🔴','😤','🌼','😫','⚽','🤙','☕','🏆','🤫','👈','😮','🙆','🍻','🍃','🐶','💁','😲','🌿','🧡','🎁','⚡','🌞','🎈','❌','✊','👋','😰','🤨','😶','🤝','🚶','💰','🍓','💢','🤟','🙁','🚨','💨','🤬','✈','🎀','🍺','🤓','😙','💟','🌱','😖','👶','🥴','▶','➡','❓','💎','💸','⬇','😨','🌚','🦋','😷','🕺','⚠','🙅','😟','😵','👎','🤲','🤠','🤧','📌','🔵','💅','🧐','🐾','🍒','😗','🤑','🌊','🤯','🐷','☎','💧','😯','💆','👆','🎤','🙇','🍑','❄','🌴','💣','🐸','💌','📍','🥀','🤢','👅','💡','💩','👐','📸','👻','🤐','🤮','🎼','🥵','🚩','🍎','🍊','👼','💍','📣','🥂'];
     
     /**
@@ -110,7 +115,7 @@ class Multibase{
                 break;
             }
             case self::BASE45:{
-                $decoded = Base45::decode($data);
+                $decoded = Base45::decode($data,self::ALPHABET45);
                 break;
             }
             case self::BASE58BTC:{
@@ -132,7 +137,7 @@ class Multibase{
                 break;
             }
             case self::PROQUINT:{
-                $decoded = Proquint::decode($data);
+                $decoded = Proquint::decode($data,self::ALPHABET_PROQUINT_CONSONANTS,self::ALPHABET_PROQUINT_VOWELS);
                 break;
             }
             case self::BASE256EMOJI:{
@@ -223,7 +228,7 @@ class Multibase{
                 break;
             }
             case self::BASE45:{
-                $encoded = Base45::encode($data);
+                $encoded = Base45::encode($data,self::ALPHABET45);
                 break;
             }
             case self::BASE58BTC:{
@@ -251,7 +256,7 @@ class Multibase{
                 break;
             }
             case self::PROQUINT:{
-                $encoded = Proquint::encode($data);
+                $encoded = Proquint::encode($data,self::ALPHABET_PROQUINT_CONSONANTS,self::ALPHABET_PROQUINT_VOWELS);
                 break;
             }
             case self::BASE256EMOJI:{
