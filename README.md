@@ -4,7 +4,8 @@ This yocLibrary enables your project to encode and decode Multibases in PHP.
 
 ## Status
 
-[![Build Status](https://travis-ci.com/yocto/yoclib-multibase-php.svg?branch=master)](https://travis-ci.com/yocto/yoclib-multibase-php)
+[![PHP Composer](https://github.com/yocto/yoclib-multibase-php/actions/workflows/php.yml/badge.svg)](https://github.com/yocto/yoclib-multibase-php/actions/workflows/php.yml)
+[![codecov](https://codecov.io/gh/yocto/yoclib-multibase-php/graph/badge.svg?token=CVJJGTZJ1X)](https://codecov.io/gh/yocto/yoclib-multibase-php)
 
 ## Installation
 
