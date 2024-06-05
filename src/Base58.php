@@ -56,8 +56,7 @@ class Base58{
 			);
 		}
 
-		$decoded = implode("", array_map("chr", $converted));
-		return $decoded;
+		return implode("", array_map("chr", $converted));
 	}
 
 	public static function encode(string $data,string $alphabet): string{

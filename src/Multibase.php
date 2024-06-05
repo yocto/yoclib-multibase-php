@@ -6,29 +6,31 @@ use InvalidArgumentException;
 class Multibase{
 
     public const IDENTITY = "\0";
-    public const BASE2 = '0';
+    /*EXPERIMENTAL*/public const BASE2 = '0';
     /*DRAFT*/public const BASE8 = '7';
     /*DRAFT*/public const BASE10 = '9';
     public const BASE16 = 'f';
     public const BASE16UPPER = 'F';
-    public const BASE32HEX = 'v';
-    public const BASE32HEXUPPER = 'V';
-    public const BASE32HEXPAD = 't';
-    public const BASE32HEXPADUPPER = 'T';
+    /*EXPERIMENTAL*/public const BASE32HEX = 'v';
+    /*EXPERIMENTAL*/public const BASE32HEXUPPER = 'V';
+    /*EXPERIMENTAL*/public const BASE32HEXPAD = 't';
+    /*EXPERIMENTAL*/public const BASE32HEXPADUPPER = 'T';
     public const BASE32 = 'b';
     public const BASE32UPPER = 'B';
-    public const BASE32PAD = 'c';
-    public const BASE32PADUPPER = 'C';
+    /*DRAFT*/public const BASE32PAD = 'c';
+    /*DRAFT*/public const BASE32PADUPPER = 'C';
     /*DRAFT*/public const BASE32Z = 'h';
     /*DRAFT*/public const BASE36 = 'k';
     /*DRAFT*/public const BASE36UPPER = 'K';
+    /*DRAFT*/public const BASE45 = 'R';
     public const BASE58BTC = 'z';
-    public const BASE58FLICKR = 'Z';
+    /*EXPERIMENTAL*/public const BASE58FLICKR = 'Z';
     public const BASE64 = 'm';
-    public const BASE64PAD = 'M';
+    /*EXPERIMENTAL*/public const BASE64PAD = 'M';
     public const BASE64URL = 'u';
     public const BASE64URLPAD = 'U';
-    /*DRAFT*/public const PROQUINT = 'p';
+    /*EXPERIMENTAL*/public const PROQUINT = 'p';
+    /*EXPERIMENTAL*/public const BASE256EMOJI = '🚀';
 
     private const ALPHABET32 = 'abcdefghijklmnopqrstuvwxyz234567=';
     private const ALPHABET32_HEX = '0123456789abcdefghijklmnopqrstuv=';
@@ -36,15 +38,17 @@ class Multibase{
 
     private const ALPHABET58_BITCOIN = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
     private const ALPHABET58_FLICKR = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
-
+    
+    private const ALPHABET256 = ['🚀','🪐','☄','🛰','🌌','🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘','🌍','🌏','🌎','🐉','☀','💻','🖥','💾','💿','😂','❤','😍','🤣','😊','🙏','💕','😭','😘','👍','😅','👏','😁','🔥','🥰','💔','💖','💙','😢','🤔','😆','🙄','💪','😉','☺','👌','🤗','💜','😔','😎','😇','🌹','🤦','🎉','💞','✌','✨','🤷','😱','😌','🌸','🙌','😋','💗','💚','😏','💛','🙂','💓','🤩','😄','😀','🖤','😃','💯','🙈','👇','🎶','😒','🤭','❣','😜','💋','👀','😪','😑','💥','🙋','😞','😩','😡','🤪','👊','🥳','😥','🤤','👉','💃','😳','✋','😚','😝','😴','🌟','😬','🙃','🍀','🌷','😻','😓','⭐','✅','🥺','🌈','😈','🤘','💦','✔','😣','🏃','💐','☹','🎊','💘','😠','☝','😕','🌺','🎂','🌻','😐','🖕','💝','🙊','😹','🗣','💫','💀','👑','🎵','🤞','😛','🔴','😤','🌼','😫','⚽','🤙','☕','🏆','🤫','👈','😮','🙆','🍻','🍃','🐶','💁','😲','🌿','🧡','🎁','⚡','🌞','🎈','❌','✊','👋','😰','🤨','😶','🤝','🚶','💰','🍓','💢','🤟','🙁','🚨','💨','🤬','✈','🎀','🍺','🤓','😙','💟','🌱','😖','👶','🥴','▶','➡','❓','💎','💸','⬇','😨','🌚','🦋','😷','🕺','⚠','🙅','😟','😵','👎','🤲','🤠','🤧','📌','🔵','💅','🧐','🐾','🍒','😗','🤑','🌊','🤯','🐷','☎','💧','😯','💆','👆','🎤','🙇','🍑','❄','🌴','💣','🐸','💌','📍','🥀','🤢','👅','💡','💩','👐','📸','👻','🤐','🤮','🎼','🥵','🚩','🍎','🍊','👼','💍','📣','🥂'];
+    
     /**
      * @param string $data
      * @param string|null $code
      * @return string
      */
     public static function decode(string $data,?string $code=null): string{
-        $decoded = null;
         if($code==null){
+            //TODO Improve for non-ASCII strings
             $code = substr($data,0,1);
             $data = substr($data,1);
         }
@@ -105,6 +109,10 @@ class Multibase{
                 $decoded = Base36::decode(strtolower($data));
                 break;
             }
+            case self::BASE45:{
+                $decoded = Base45::decode($data);
+                break;
+            }
             case self::BASE58BTC:{
                 $decoded = Base58::decode($data,self::ALPHABET58_BITCOIN);
                 break;
@@ -123,6 +131,14 @@ class Multibase{
                 $decoded = Base64::decode(str_replace(['-','_'],['+','/'],$data));
                 break;
             }
+            case self::PROQUINT:{
+                $decoded = Proquint::decode($data);
+                break;
+            }
+            case self::BASE256EMOJI:{
+                $decoded = Base256Emoji::decode($data,self::ALPHABET256);
+                break;
+            }
             default:{
                 throw new InvalidArgumentException('Unsupported base decoding: '.$code);
             }
@@ -136,8 +152,7 @@ class Multibase{
      * @param bool $addCodePrefix
      * @return string|null
      */
-    public static function encode(string $code,string $data,$addCodePrefix=true){
-        $encoded = null;
+    public static function encode(string $code,string $data,bool $addCodePrefix=true): ?string{
         switch($code){
             case self::IDENTITY:{
                 $encoded = $data;
@@ -207,6 +222,10 @@ class Multibase{
                 $encoded = strtoupper(Base36::encode($data));
                 break;
             }
+            case self::BASE45:{
+                $encoded = Base45::encode($data);
+                break;
+            }
             case self::BASE58BTC:{
                 $encoded = Base58::encode($data,self::ALPHABET58_BITCOIN);
                 break;
@@ -229,6 +248,14 @@ class Multibase{
             }
             case self::BASE64URLPAD:{
                 $encoded = str_replace(['+','/'],['-','_'],Base64::encode($data));
+                break;
+            }
+            case self::PROQUINT:{
+                $encoded = Proquint::encode($data);
+                break;
+            }
+            case self::BASE256EMOJI:{
+                $encoded = Base256Emoji::encode($data,self::ALPHABET256);
                 break;
             }
             default:{

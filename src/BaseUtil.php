@@ -9,7 +9,7 @@ class BaseUtil{
      * @param $toBase
      * @return string
      */
-	public static function str_baseconvert($number, $fromBase, $toBase) {
+	public static function str_baseconvert($number, $fromBase, $toBase): string{
 		$digits = '0123456789abcdefghijklmnopqrstuvwxyz';
 		$length = strlen($number);
 		$result = '';

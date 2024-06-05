@@ -7,7 +7,7 @@ class BasicTest extends TestCase{
 
     public function testCSV(){
         $csv = TestUtil::getCSVData('tests/basic.csv');
-        TestUtil::runTest($this,$csv,true,true);
+        TestUtil::runTest($this,$csv);
     }
 
 }
