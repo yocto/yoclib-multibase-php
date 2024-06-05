@@ -12,7 +12,7 @@
 	],
 	"license": "GPL-3.0-or-later",
 	"require": {
-		"php": "^7||^8"
+		"php": "^7.4||^8"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^7||^8||^9"
@@ -26,5 +26,8 @@
 		"psr-4": {
 			"YOCLIB\\Multiformats\\Multibase\\Tests\\": "tests/"
 		}
+	},
+	"scripts": {
+		"test": "phpunit --coverage-clover coverage.xml ."
 	}
 }
