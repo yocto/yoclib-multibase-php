@@ -5,27 +5,26 @@ class Base256Emoji{
 
     /**
      * @param string $binary
-     * @param array $alphabet
+     * @param string $alphabet
      * @return string
      */
-    public static function decode(string $binary,array $alphabet): string{
-        $characters = preg_split('//u',$binary, null, PREG_SPLIT_NO_EMPTY);
-        $binary = '';
-        foreach($characters AS $c){
-            $binary = chr(array_search($c,$alphabet,true));
+    public static function decode(string $binary,string $alphabet): string{
+        $data = '';
+        foreach(mb_str_split($binary) ?: [] AS $c){
+            $data .= chr(array_search($c,mb_str_split($alphabet),true));
         }
-        return $binary;
+        return $data;
     }
 
     /**
      * @param string $data
-     * @param array $alphabet
+     * @param string $alphabet
      * @return string
      */
-    public static function encode(string $data,array $alphabet): string{
-        $binary = Multibase::BASE256EMOJI;
+    public static function encode(string $data,string $alphabet): string{
+        $binary = '';
         for($i=0;$i<strlen($data);$i++){
-            $binary .= $alphabet[ord($data[$i])];
+            $binary .= mb_str_split($alphabet)[ord($data[$i])];
         }
         return $binary;
     }

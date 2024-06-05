@@ -23,12 +23,6 @@ class TestUtil{
             $encoding = $csv[$i][0];
             $vector = $csv[$i][1];
 
-            if($encoding==='base256emoji'){
-                //TODO
-                echo '[Skipping Base256Emoji for now]'.PHP_EOL;
-                continue;
-            }
-
             $constantName = Multibase::class.'::'.strtoupper($encoding);
 
             if($encode){

@@ -5,6 +5,8 @@ class Proquint{
 
     /**
      * @param string $binary
+     * @param string $alphabetConsonants
+     * @param string $alphabetVowels
      * @return string
      */
     public static function decode(string $binary,string $alphabetConsonants,string $alphabetVowels): string{
@@ -22,6 +24,8 @@ class Proquint{
 
     /**
      * @param string $data
+     * @param string $alphabetConsonants
+     * @param string $alphabetVowels
      * @return string
      */
     public static function encode(string $data,string $alphabetConsonants,string $alphabetVowels): string{
