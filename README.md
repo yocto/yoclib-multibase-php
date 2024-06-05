@@ -13,4 +13,23 @@ This yocLibrary enables your project to encode and decode Multibases in PHP.
 
 ## Use
 
-TODO
+### Encoding
+
+```php
+use YOCLIB\Multiformats\Multibase\Multibase;
+
+$text = 'Hello world!';
+
+$encodedString = Multibase::encode(Multibase::BASE16UPPER,$text);
+}
+```
+
+### Decoding
+
+```php
+use YOCLIB\Multiformats\Multibase\Multibase;
+
+$encodedString = 'F48656C6C6F20776F726C6421';
+
+$text = Multibase::decode($encodedString);
+```
